@@ -1,71 +1,188 @@
-<h1>Build a local RAG with Ollama</h1>
+# 📜 Itihaas
 
-<h2>Watch the full tutorial on my YouTube Channel</h2>
-<div>
+[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green.svg)](https://opensource.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
-<a href="https://youtu.be/c5jHhMXmXyo">
-    <img src="thumbnail_small.png" alt="Thomas Janssen Youtube" width="200"/>
-</a>
-</div>
+> **Simple and powerful.** Democratizing access to history and cultural heritage through Agentic RAG technology
 
-<h2>Prerequisites</h2>
-<ul>
-  <li>Python 3.11+</li>
-</ul>
+## 🌟 About
 
-<h2>Installation</h2>
-<h3>1. Clone the repository:</h3>
+**Itihaas** (History) is an open-source educational tool that makes local history and cultural knowledge accessible to everyone. Built with Agentic RAG (Retrieval-Augmented Generation), it serves as an interactive museum guide and research assistant for exploring historical heritage.
+
+### The Problem
+
+Local history (like that of Barrackpore) and deep cultural insights (like Tagore's lesser-known works) are often buried in dense books or scattered across Wikipedia pages. Students, researchers, and tourists struggle to find specific, contextual answers quickly. Traditional search engines return generic results, and academic resources are often behind paywalls or written in inaccessible language.
+
+### The Solution
+
+**Itihaas** solves this by:
+- 📚 **Centralizing Knowledge**: Aggregates information from multiple sources into a searchable knowledge base
+- 🤖 **Intelligent Retrieval**: Uses vector embeddings to find the most relevant context for any question
+- 💬 **Natural Conversations**: Provides detailed, contextual answers in a conversational format
+- 🎯 **Agentic Architecture**: The AI actively decides when to retrieve information, ensuring accurate and comprehensive responses
+- 🆓 **Open Source**: Free and accessible to everyone, with no API costs when using local models
+
+## ✨ Features
+
+- **Agentic RAG**: The AI autonomously retrieves relevant information before answering
+- **Local Processing**: Runs entirely on your machine using Ollama (no cloud API costs)
+- **Rich Context**: Provides detailed, multi-paragraph answers with source citations
+- **Conversational Memory**: Maintains context across the conversation
+- **Easy Setup**: Simple installation and data ingestion process
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.11 or higher
+- [Ollama](https://ollama.com/) installed and running
+- Required Ollama models (will be downloaded automatically on first use):
+  - Embedding model: `mxbai-embed-large` (or `nomic-embed-text`)
+  - Chat model: `qwen2.5:7b` (or `llama3.2:3b`)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd itihaas
+   ```
+
+2. **Create a virtual environment** (recommended)
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and configure your settings (defaults work for most setups).
+
+5. **Prepare your data**
+   - Create a `data/` folder
+   - Add `.txt` or `.pdf` files containing information about:
+     - Barrackpore's history
+     - Rabindranath Tagore's works
+     - Bengal's cultural heritage
+     - Any other relevant historical content
+   
+   **Example**: Copy Wikipedia articles or historical documents into text files.
+
+6. **Build the vector database**
+   ```bash
+   python ingest.py
+   ```
+   This will process all files in `data/` and create the searchable knowledge base.
+
+7. **Run the application**
+   ```bash
+   streamlit run app.py
+   ```
+
+8. **Open your browser**
+   Navigate to `http://localhost:8501` and start asking questions!
+
+## 📁 Project Structure
 
 ```
-git clone https://github.com/ThomasJanssen-tech/Local-RAG-with-Ollama
-cd Local-RAG-With-Ollama
+itihaas/
+├── data/                  # Place your source PDFs/TXT files here
+├── vector_db/             # ChromaDB database (auto-generated, don't commit)
+├── app.py                 # Main Streamlit application
+├── ingest.py              # Script to build the vector database
+├── requirements.txt       # Python dependencies
+├── README.md              # This file
+├── LICENSE                # MIT License
+├── .env.example           # Environment variables template
+└── .env                   # Your actual environment variables (not in git)
 ```
 
-<h3>2. Create a virtual environment</h3>
+## 🔧 Configuration
 
-```
-python -m venv venv
-```
+Create a `.env` file with the following variables:
 
-<h3>3. Activate the virtual environment</h3>
+```env
+# Ollama Configuration
+EMBEDDING_MODEL=mxbai-embed-large
+CHAT_MODEL=qwen2.5:7b
+MODEL_PROVIDER=ollama
 
-```
-venv\Scripts\Activate
-(or on Mac): source venv/bin/activate
-```
-
-<h3>4. Install libraries</h3>
-
-```
-pip install -r requirements.txt
+# Database Configuration
+DATABASE_LOCATION=vector_db
+COLLECTION_NAME=itihaas
 ```
 
-<h3>5. Add Bright Data API Key</h3>
-<ul>
-<li>Get your $15 Bright Data credits: https://brdta.com/tomstechacademy</li>
-<li>Rename the .env.example file to .env</li>
-<li>Add your Bright Data API key</li>
-<li><i>If you want to use ChatGPT or Anthropic models, add an API key (not required for Ollama)</i></li>
-</ul>
+### Model Recommendations
 
-<h2>Executing the scripts</h2>
+**For Embeddings:**
+- `mxbai-embed-large` (recommended) - Best quality, ~335MB
+- `nomic-embed-text` - Good alternative, smaller size
 
-- Open a terminal in VS Code
+**For Chat:**
+- `qwen2.5:7b` (recommended) - Excellent reasoning, ~4.4GB
+- `llama3.2:3b` - Faster, smaller, ~2GB
+- `mistral:7b` - Good balance
 
-- Execute the following command:
+## 📖 Usage Examples
 
-```
-python run 1_scraping_wikipedia.py
-python run 2_chunking_embedding_ingestion.py
-streamlit run 3_chatbot.py
-```
+Once the app is running, try asking:
 
-<h2>Further reading</h2>
-<ul>
-<li>https://www.ibm.com/think/topics/vector-embedding</li>
-<li>https://ollama.com/blog/embedding-models</li>
-<li>https://python.langchain.com/docs/integrations/vectorstores/chroma/</li>
-<li>https://python.langchain.com/docs/integrations/text_embedding/ollama/</li>
-<li>https://ollama.com/library/mxbai-embed-large</li>
-<li>https://ollama.com/library/qwen3</li>
-</ul>
+- "Tell me about the historical significance of Barrackpore"
+- "What are some lesser-known works by Rabindranath Tagore?"
+- "Explain the cultural importance of the Hooghly River"
+- "What architectural styles are found in colonial Bengal?"
+
+The AI will retrieve relevant information and provide detailed, contextual answers with source citations.
+
+## 🎓 Educational Impact
+
+This project serves multiple educational purposes:
+
+1. **For Students**: Quick access to historical facts and cultural context
+2. **For Researchers**: Efficient information retrieval from multiple sources
+3. **For Tourists**: Interactive guide to local heritage sites
+4. **For Educators**: Teaching tool for Bengal's history and culture
+
+## 🛠️ Technology Stack
+
+- **LangChain**: Framework for building LLM applications
+- **ChromaDB**: Vector database for storing embeddings
+- **Ollama**: Local LLM inference engine
+- **Streamlit**: Web interface framework
+- **Python**: Programming language
+
+## 🤝 Contributing
+
+Contributions are welcome! This is an open-source project aimed at preserving and democratizing access to cultural knowledge.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [LangChain](https://www.langchain.com/) and [ChromaDB](https://www.trychroma.com/)
+- Powered by [Ollama](https://ollama.com/) for local AI processing
+- UI built with [Streamlit](https://streamlit.io/)
+
+## 📧 Contact
+
+For questions, suggestions, or contributions, please open an issue on GitHub.
+
+---
+
+**Made with ❤️ for preserving and democratizing access to history**
