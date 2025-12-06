@@ -1,0 +1,13 @@
+venv
+.env
+__pycache__/
+/datasets
+/chroma_db
+/vector_db
+snapshot.txt
+*.pyc
+.DS_Store
+.idea/
+~$*.xlsx
+*.swp
+*.swo
