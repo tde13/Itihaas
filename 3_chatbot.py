@@ -35,7 +35,7 @@ vector_store = Chroma(
 llm = init_chat_model(
   os.getenv("CHAT_MODEL"),
   model_provider=os.getenv("MODEL_PROVIDER"),
-  temperature=0  # Keeping temp 0 ensures factual accuracy
+  temperature=0
 )
 
 ########################### DEFINE RETRIEVER TOOL ###########################
@@ -43,8 +43,7 @@ llm = init_chat_model(
 @tool
 def retrieve(query: str):
   """Retrieve relevant information for a query from the vector store."""
-  # CHANGED: Increased k to 5.
-  # To write a long answer, the AI needs more raw material.
+  # Fetch 5 docs to ensure enough content for a paragraph answer
   retrieved_docs = vector_store.similarity_search(query, k=5)
 
   results = []
@@ -57,12 +56,12 @@ def retrieve(query: str):
 
 ########################### DEFINE PROMPT ###########################
 
-# CHANGED: Significantly upgraded the System Prompt to force detail.
 prompt = ChatPromptTemplate.from_messages(
   [
     (
       "system",
-      "You are an expert researcher and historian. Your goal is to provide **elaborate and descriptive** answers. "
+      "You are 'Itihaas', an expert historian and researcher specializing in Bengal's heritage. "
+      "Your goal is to provide **elaborate and descriptive** answers. "
       "Use the 'retrieve' tool to fetch information. \n\n"
 
       "**Guidelines for Answering:**\n"
@@ -93,8 +92,20 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 ########################### STREAMLIT APP ###########################
 
-st.set_page_config(page_title="Agentic RAG Chatbot", page_icon="🦜")
-st.title("🦜 Agentic RAG Chatbot")
+# CHANGED: Updated Title and Icon
+st.set_page_config(page_title="Itihaas | Bengal Heritage AI", page_icon="📜")
+
+# Sidebar for controls
+with st.sidebar:
+  st.title("📜 Itihaas")
+  st.write("An Open Source AI for Bengal Heritage.")
+  # A reset button to clear history if the conversation gets messy
+  if st.button("Clear Chat History"):
+    st.session_state.messages = []
+    st.rerun()
+
+st.title("📜 Itihaas: The Heritage Bot")
+st.markdown("Ask me detailed questions about **Barrackpore** or **Rabindranath Tagore**.")
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -110,7 +121,7 @@ for message in st.session_state.messages:
       st.markdown(message.content)
 
 # Input box for user question
-user_question = st.chat_input("Ask me anything about Rabindranath or Barrackpore...")
+user_question = st.chat_input("Ex: Why is Barrackpore historically significant?")
 
 if user_question:
   # Add user message to chat UI
@@ -119,8 +130,8 @@ if user_question:
   # Add to internal history
   st.session_state.messages.append(HumanMessage(user_question))
 
-  # Add a spinner so the user knows the AI is thinking (good for UX when generating long answers)
-  with st.spinner("Thinking..."):
+  # Add a spinner
+  with st.spinner("Consulting the archives..."):
     # Call the agent executor with history
     result = agent_executor.invoke({
       "input": user_question,
